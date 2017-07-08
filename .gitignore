@@ -29,3 +29,5 @@ commands/mancontent_gen.go
 
 lfstest-*
 !lfstest-*.go
+
+.vagrant

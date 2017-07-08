@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+# This box requires Vagrant 1.8.1+
+	config.vm.define "lfsubuntu16" do |lfsubuntu16|
+		lfsubuntu16.vm.box = "bento/ubuntu-16.04"
+		# lfsubuntu16.vm.network :private_network, ip: "172.16.100.12"
+
+		# This box comes without puppet, install it first
+		lfsubuntu16.vm.provision "shell", inline: "sudo rm /var/lib/dpkg/lock && sudo apt-get install -y puppet"
+
+		lfsubuntu16.vm.synced_folder "..", "/home/vagrant/go/src/github.com/git-lfs/git-lfs"
+		lfsubuntu16.vm.provision :puppet do |puppet|
+			puppet.manifests_path = "manifests"
+			puppet.manifest_file  = "ubuntu.pp"
+			puppet.module_path    = "modules"
+		end
+	end
+end
